@@ -6,6 +6,7 @@ import Product from "./Page/Product";
 import AllUser from "./Page/AllUser";
 import GuideBook from "./Page/GuideBook";
 import Transaction from "./Page/Transaction";
+import SettingsProfile from "./Page/SettingsProfile";
 
 const App = () => {
   return (
@@ -16,6 +17,9 @@ const App = () => {
       <Route path="/users" element={<AllUser />} />
       <Route path="/guide" element={<GuideBook />} />
       <Route path="/transaction" element={<Transaction />} />
+      <Route path="/settings" element={<SettingsProfile />} />
+     
+      
     </Routes>
   );
 };

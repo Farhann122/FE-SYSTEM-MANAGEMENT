@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Table, DatePicker, Button, Card, Col, Row } from "antd";
+import { Table, DatePicker, Card, Col, Row } from "antd";
 import moment from "moment";
-import Layout from "../Component/Layout"; // Assuming Layout is in this path
+import Layout from "../Component/Layout"; // Pastikan path Layout benar
 
 const Transaction = () => {
-  // State untuk menyimpan transaksi dan filter
-  const [transactions, setTransactions] = useState([
+  // Data transaksi awal
+  const transactions = [
     {
       key: 1,
       product: "Laptop Dell",
@@ -34,73 +34,43 @@ const Transaction = () => {
       amount: 18000000,
       date: "2025-02-15",
     },
-  ]);
-
-  const [filteredTransactions, setFilteredTransactions] =
-    useState(transactions);
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  // Kolom tabel
-  const columns = [
-    { title: "Produk", dataIndex: "product", key: "product" },
-    { title: "Pelanggan", dataIndex: "customer", key: "customer" },
-    {
-      title: "Jumlah Pembelian",
-      dataIndex: "amount",
-      key: "amount",
-      render: (text) => `Rp ${text.toLocaleString()}`,
-    },
-    { title: "Tanggal Pembelian", dataIndex: "date", key: "date" },
   ];
 
-  // Fungsi untuk menyaring transaksi berdasarkan tanggal
-  const handleFilterChange = (date, dateString) => {
-    setSelectedDate(dateString);
-    if (dateString) {
-      const filtered = transactions.filter((transaction) => {
-        const transactionDate = moment(transaction.date);
-        return (
-          transactionDate.isSame(date, "day") ||
-          transactionDate.isSame(date, "month") ||
-          transactionDate.isSame(date, "year")
-        );
-      });
-      setFilteredTransactions(filtered);
-    } else {
-      setFilteredTransactions(transactions);
-    }
-  };
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  // Filter transaksi berdasarkan tanggal yang dipilih
+  const filteredTransactions = transactions.filter((transaction) => {
+    if (!selectedDate) return true; // Jika tidak ada tanggal dipilih, tampilkan semua transaksi
+    return transaction.date === selectedDate; // Bandingkan langsung dengan format string
+  });
 
   // Fungsi untuk menghitung total penjualan harian
   const getDailyTotalSales = () => {
-    if (!selectedDate) return 0;
-    return filteredTransactions.reduce((total, transaction) => {
-      const transactionDate = moment(transaction.date).format("YYYY-MM-DD");
-      if (transactionDate === selectedDate) {
-        return total + transaction.amount;
-      }
-      return total;
-    }, 0);
+    if (!selectedDate) return 0; // Jika belum memilih tanggal, return 0
+    return filteredTransactions.reduce(
+      (total, transaction) => total + transaction.amount,
+      0
+    );
   };
 
   // Fungsi untuk menghitung total penjualan bulanan
   const getMonthlyTotalSales = () => {
     if (!selectedDate) return 0;
-    return filteredTransactions.reduce((total, transaction) => {
-      const transactionDate = moment(transaction.date).format("YYYY-MM");
-      if (transactionDate === moment(selectedDate).format("YYYY-MM")) {
-        return total + transaction.amount;
-      }
-      return total;
+    return transactions.reduce((total, transaction) => {
+      return moment(transaction.date).isSame(moment(selectedDate), "month")
+        ? total + transaction.amount
+        : total;
     }, 0);
   };
 
   // Fungsi untuk menghitung total penjualan tahunan
   const getYearlyTotalSales = () => {
-    return filteredTransactions.reduce(
-      (total, transaction) => total + transaction.amount,
-      0
-    );
+    if (!selectedDate) return 0;
+    return transactions.reduce((total, transaction) => {
+      return moment(transaction.date).isSame(moment(selectedDate), "year")
+        ? total + transaction.amount
+        : total;
+    }, 0);
   };
 
   return (
@@ -110,23 +80,24 @@ const Transaction = () => {
           Transaksi Pembelian
         </h1>
         <p className="text-gray-600">
-          Lihat transaksi pembelian yang terjadi berdasarkan hari, bulan, dan
-          tahun.
+          Lihat transaksi pembelian berdasarkan hari, bulan, dan tahun.
         </p>
       </div>
 
-      {/* Filter berdasarkan tanggal (hari, bulan, tahun) */}
+      {/* Filter berdasarkan tanggal */}
       <div className="flex justify-between items-center mb-4">
         <DatePicker
           picker="date"
-          defaultValue={selectedDate ? moment(selectedDate) : moment()}
-          onChange={handleFilterChange}
+          value={selectedDate ? moment(selectedDate, "YYYY-MM-DD") : null}
+          onChange={(date) =>
+            setSelectedDate(date ? date.format("YYYY-MM-DD") : null)
+          }
           className="w-64"
           placeholder="Pilih tanggal"
         />
       </div>
 
-      {/* Tampilkan Total Penjualan Harian, Bulanan, dan Tahunan */}
+      {/* Tampilkan Total Penjualan */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-800">Total Penjualan</h2>
         <Row gutter={16}>
@@ -156,7 +127,16 @@ const Transaction = () => {
 
       {/* Tabel Transaksi */}
       <Table
-        columns={columns}
+        columns={[
+          { title: "Pelanggan", dataIndex: "customer", key: "customer" },
+          {
+            title: "Jumlah Pembelian",
+            dataIndex: "amount",
+            key: "amount",
+            render: (text) => `Rp ${text.toLocaleString()}`,
+          },
+          { title: "Tanggal Pembelian", dataIndex: "date", key: "date" },
+        ]}
         dataSource={filteredTransactions}
         pagination={{ pageSize: 5 }}
         rowKey="key"

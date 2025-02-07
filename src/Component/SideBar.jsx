@@ -5,6 +5,7 @@ import {
   AiFillDashboard,
   AiFillHome,
   AiFillProduct,
+  AiOutlineSetting,
   AiOutlineTransaction,
   AiOutlineUser,
 } from "react-icons/ai";
@@ -23,6 +24,7 @@ const Sidebar = () => {
     { href: "/users", label: "Users", icon: <AiOutlineUser /> },
     { href: "/guide", label: "Guide Book", icon: <AiFillBook /> },
     { href: "/transaction", label: "Transaction", icon: <AiOutlineTransaction /> },
+    { href: "/settings", label: "Settings Profile", icon: <AiOutlineSetting /> },
   ];
 
   return (

@@ -6,7 +6,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import ProductTable from "../Component/ProductTable";
 import ProductModal from "../Component/ProductModal";
-import { Form } from "antd"; // Correct import from 'antd'
+import { Form, Modal, Button, Select } from "antd"; // Import Modal, Button, Select
 
 const ProductPage = () => {
   const [products, setProducts] = useState([
@@ -34,9 +34,53 @@ const ProductPage = () => {
   ]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm(); 
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null); // Product being edited
+  const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
 
+  // Handle Add Product
+  const handleAddProduct = (values) => {
+    setProducts([...products, { key: products.length + 1, ...values }]);
+    setIsModalVisible(false);
+    form.resetFields();
+  };
+
+  // Handle Edit Product
+  const handleEditProduct = (values) => {
+    const updatedProducts = products.map((product) =>
+      product.key === currentProduct.key ? { ...product, ...values } : product
+    );
+    setProducts(updatedProducts);
+    setIsEditModalVisible(false);
+    setCurrentProduct(null);
+  };
+
+  // Handle Delete Product
+  const handleDeleteProduct = (key) => {
+    const updatedProducts = products.filter((product) => product.key !== key);
+    setProducts(updatedProducts);
+  };
+
+  // Filter by Category
+  const handleCategoryFilter = (value) => {
+    setCategoryFilter(value);
+  };
+
+  // Export to Excel
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(products);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Produk");
+
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+
+    saveAs(data, "produk.xlsx");
+  };
+
+  // Columns for Product Table
   const columns = [
     {
       title: "ID",
@@ -59,23 +103,35 @@ const ProductPage = () => {
       render: (text) => `Rp ${text.toLocaleString()}`,
     },
     { title: "Stok", dataIndex: "stock", key: "stock" },
+    {
+      title: "Aksi",
+      key: "action",
+      render: (text, record) => (
+        <div>
+          <Button
+            onClick={() => handleEdit(record)}
+            type="primary"
+            size="small"
+            style={{ marginRight: 8 }}
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={() => handleDeleteProduct(record.key)}
+            type="danger"
+            size="small"
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    },
   ];
 
-  const handleAddProduct = (values) => {
-    setProducts([...products, { key: products.length + 1, ...values }]);
-    setIsModalVisible(false);
-    form.resetFields();
-  };
-
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(products);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Produk");
-
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-
-    saveAs(data, "produk.xlsx");
+  // Handle Edit action
+  const handleEdit = (product) => {
+    setCurrentProduct(product);
+    setIsEditModalVisible(true);
   };
 
   return (
@@ -94,16 +150,81 @@ const ProductPage = () => {
         setIsModalVisible={setIsModalVisible}
       />
 
-      {/* ProductTable Component */}
-      <ProductTable columns={columns} products={products} />
+      {/* Filter by Category */}
+      <div className="mb-4">
+        <Select
+          style={{ width: 200 }}
+          placeholder="Filter by Kategori"
+          onChange={handleCategoryFilter}
+          value={categoryFilter}
+        >
+          <Select.Option value="">All</Select.Option>
+          <Select.Option value="Elektronik">Elektronik</Select.Option>
+          <Select.Option value="Smartphone">Smartphone</Select.Option>
+          <Select.Option value="Furniture">Furniture</Select.Option>
+        </Select>
+      </div>
 
-      {/* ProductModal Component */}
+      {/* Product Table Component */}
+      <ProductTable
+        columns={columns}
+        products={
+          categoryFilter
+            ? products.filter((product) => product.category === categoryFilter)
+            : products
+        }
+      />
+
+      {/* Product Add Modal */}
       <ProductModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         form={form}
         handleAddProduct={handleAddProduct}
       />
+
+      {/* Product Edit Modal */}
+      <Modal
+        title="Edit Produk"
+        visible={isEditModalVisible}
+        onCancel={() => setIsEditModalVisible(false)}
+        onOk={() => form.submit()}
+      >
+        <Form
+          form={form}
+          initialValues={currentProduct}
+          onFinish={handleEditProduct}
+        >
+          <Form.Item
+            label="Nama Produk"
+            name="name"
+            rules={[{ required: true, message: "Nama produk harus diisi" }]}
+          >
+            <input />
+          </Form.Item>
+          <Form.Item
+            label="Kategori"
+            name="category"
+            rules={[{ required: true, message: "Kategori harus dipilih" }]}
+          >
+            <input />
+          </Form.Item>
+          <Form.Item
+            label="Harga"
+            name="price"
+            rules={[{ required: true, message: "Harga harus diisi" }]}
+          >
+            <input type="number" />
+          </Form.Item>
+          <Form.Item
+            label="Stok"
+            name="stock"
+            rules={[{ required: true, message: "Stok harus diisi" }]}
+          >
+            <input type="number" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Layout>
   );
 };
