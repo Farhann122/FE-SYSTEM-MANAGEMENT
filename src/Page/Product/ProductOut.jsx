@@ -9,18 +9,18 @@ const ProductOut = () => {
       name: "Laptop Dell",
       category: "Elektronik",
       price: 15000000,
-      stock: 10,
-      arrivalHistory: [{ date: "2024-02-01", addedStock: 10 }],
+      stock: 2, // Sisa stok setelah pengeluaran
+      outHistory: [{ date: "2024-02-10", quantity: 3 }],
     },
     {
       key: 2,
       name: "iPhone 13",
       category: "Smartphone",
       price: 17000000,
-      stock: 5,
-      arrivalHistory: [
-        { date: "2024-01-28", addedStock: 3 },
-        { date: "2024-02-05", addedStock: 2 },
+      stock: 1,
+      outHistory: [
+        { date: "2024-01-15", quantity: 2 },
+        { date: "2024-02-05", quantity: 2 },
       ],
     },
   ]);
@@ -28,35 +28,24 @@ const ProductOut = () => {
   const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
 
-  // Konfigurasi kolom untuk Ant Design Table
+  // Konfigurasi kolom tabel
   const columns = [
-    {
-      title: "Nama Produk",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Kategori",
-      dataIndex: "category",
-      key: "category",
-    },
+    { title: "Nama Produk", dataIndex: "name", key: "name" },
+    { title: "Kategori", dataIndex: "category", key: "category" },
     {
       title: "Harga",
       dataIndex: "price",
       key: "price",
       render: (price) => `Rp ${price.toLocaleString()}`,
     },
-    {
-      title: "Stok",
-      dataIndex: "stock",
-      key: "stock",
-    },
+    { title: "Sisa Stok", dataIndex: "stock", key: "stock" },
     {
       title: "Aksi",
       key: "action",
       render: (_, record) => (
         <Button
-          type="link"
+          type="default"
+          className="bg-orange-500 border-orange-500 text-white hover:bg-orange-400"
           onClick={() => {
             setCurrentProduct(record);
             setIsHistoryModalVisible(true);
@@ -71,32 +60,43 @@ const ProductOut = () => {
   return (
     <Layout>
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-        Riwayat Product Keluar
+        Riwayat Produk Keluar
       </h1>
 
+      {/* Tabel Produk */}
       <Table
         dataSource={products}
         columns={columns}
         pagination={{ pageSize: 5 }}
+      
       />
 
-      {/* Modal untuk menampilkan riwayat kedatangan produk */}
+      {/* Modal Riwayat Pengeluaran */}
       <Modal
-        title={`Riwayat Kedatangan - ${currentProduct?.name}`}
+        title={`Riwayat Pengeluaran - ${currentProduct?.name}`}
         open={isHistoryModalVisible}
         onCancel={() => setIsHistoryModalVisible(false)}
         footer={null}
       >
         {currentProduct ? (
-          <ul className="list-disc pl-6">
-            {currentProduct.arrivalHistory.map((history, index) => (
-              <li key={index}>
-                {history.date} - Tambah Stok: {history.addedStock}
-              </li>
-            ))}
-          </ul>
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="border p-2">Tanggal</th>
+                <th className="border p-2">Jumlah Keluar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentProduct.outHistory.map((history, index) => (
+                <tr key={index} className="text-center">
+                  <td className="border p-2">{history.date}</td>
+                  <td className="border p-2">{history.quantity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         ) : (
-          <p>Tidak ada data riwayat kedatangan.</p>
+          <p>Tidak ada riwayat pengeluaran.</p>
         )}
       </Modal>
     </Layout>

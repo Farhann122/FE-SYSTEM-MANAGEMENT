@@ -4,7 +4,6 @@ import { Table, Button } from "antd";
 const ProductTable = ({
   products,
   handleEdit,
-  handleOpenHistory,
   handleDeleteProduct,
 }) => {
   const columns = [
@@ -22,23 +21,20 @@ const ProductTable = ({
       title: "Aksi",
       key: "action",
       render: (_, record) => (
-        <div>
-          <Button
+        <div className="flex gap-4">
+          <button
             onClick={() => handleEdit(record)}
-            type="primary"
-            size="small"
-            style={{ marginRight: 8 }}
+            className="font-poppins text-sm bg- w-16 h-6  bg-orange-500 rounded-md hover:bg-orange-600 flex items-center justify-center gap-2 text-white"
           >
             Edit
-          </Button>
+          </button>
 
-          <Button
+          <button
             onClick={() => handleDeleteProduct(record.key)}
-            type="danger"
-            size="small"
+            className="font-poppins text-sm bg- w-16 h-6  bg-red-500 rounded-md hover:bg-red-600 flex items-center justify-center gap-2 text-white"
           >
             Delete
-          </Button>
+          </button>
         </div>
       ),
     },

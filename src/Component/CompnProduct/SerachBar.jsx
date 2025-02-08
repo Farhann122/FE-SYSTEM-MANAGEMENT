@@ -5,6 +5,9 @@ import {
   PlusOutlined,
   FileExcelOutlined,
 } from "@ant-design/icons";
+import { FiPlusCircle } from "react-icons/fi";
+import { AiFillPlusCircle, AiFillPlusSquare } from "react-icons/ai";
+import { BsFilePlus } from "react-icons/bs";
 
 const SearchBar = ({
   searchText,
@@ -26,22 +29,24 @@ const SearchBar = ({
 
       <div className="flex gap-2">
         {/* Tombol Tambah Produk */}
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
+
+        <button
           onClick={() => setIsModalVisible(true)}
+          className="font-poppins text-sm bg-orange-500 w-44 rounded-lg hover:bg-orange-400 flex items-center justify-center gap-2 "
         >
-          Tambah Produk
-        </Button>
+          <PlusOutlined className="text-white" />
+          <h1 className="text-white"> Tambah Product</h1>
+        </button>
 
         {/* Tombol Export ke Excel */}
-        <Button
-          type="default"
-          icon={<FileExcelOutlined />}
+        <button
           onClick={exportToExcel}
+          className="font-poppins text-sm bg-green-700 w-36 rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 "
         >
-          Export Excel
-        </Button>
+          <FileExcelOutlined className="text-white" />
+          <h1 className="text-white"> Export Excel</h1>
+        </button>
+        
       </div>
     </div>
   );

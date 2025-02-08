@@ -15,12 +15,12 @@ const Layout = ({ children }) => {
         <Header />
 
         {/* Content Wrapper */}
-        <main className="flex-1 p-6 bg-white shadow-md rounded-md m-6">
+        <main className="flex-1 p-6 bg-white shadow-md rounded-md m-4">
           {children}
         </main>
 
         {/* Footer */}
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

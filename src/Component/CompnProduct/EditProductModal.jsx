@@ -18,7 +18,7 @@ const EditProductModal = ({
   return (
     <Modal
       title="Edit Produk"
-      visible={isEditModalVisible}
+      open={isEditModalVisible}
       onCancel={() => setIsEditModalVisible(false)}
       onOk={() => form.submit()}
     >
@@ -29,6 +29,13 @@ const EditProductModal = ({
         <Form.Item
           label="Kategori"
           name="category"
+          rules={[{ required: true }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Harga"
+          name="Harga"
           rules={[{ required: true }]}
         >
           <Input />

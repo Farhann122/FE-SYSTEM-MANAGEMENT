@@ -16,7 +16,7 @@ const Home = () => {
 
         {/* CTA Button */}
         <div className="mt-6">
-          <button className="px-6 py-3 text-lg font-medium text-white bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-600 transition-all">
+          <button className="px-6 py-3 text-lg font-medium text-white bg-orange-500 rounded-lg shadow-lg hover:bg-orange-600 transition-all">
             Baca Sekarang
           </button>
         </div>

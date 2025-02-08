@@ -10,6 +10,7 @@ import ManagementProduct from "./Page/Product/ManagementProduct";
 import ProductIn from "./Page/Product/ProductIn";
 import ProductOut from "./Page/Product/ProductOut";
 import CategoryProduct from "./Page/Category/CategoryProduct";
+import Login from "./Page/Login/Login";
 
 const App = () => {
   return (
@@ -24,8 +25,7 @@ const App = () => {
       <Route path="/productin" element={<ProductIn />} />
       <Route path="/productout" element={<ProductOut />} />
       <Route path="/category" element={<CategoryProduct />} />
-      
-
+      <Route path="/login" element={<Login />} />
     </Routes>
   );
 };

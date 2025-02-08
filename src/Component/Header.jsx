@@ -15,20 +15,20 @@ const Header = () => {
   };
 
   return (
-    <div className="w-full h-16 bg-zinc-800 flex items-center px-4 md:px-6 shadow-md justify-between flex-wrap">
+    <div className="w-full h-16 bg-white flex items-center px-4 md:px-6 shadow-md justify-between flex-wrap">
       {/* Nama Brand */}
-      <div className="text-white text-lg font-poppins">
+      <div className="text-gray-800 text-lg font-poppins">
         <h1 className="text-sm md:text-lg">Shineskin Skincare </h1>
       </div>
 
       {/* Profil User */}
       <div className="flex items-center gap-2 md:gap-4 cursor-pointer">
-        <h1 className="text-white font-poppins font-light hidden md:flex">
+        <h1 className="text-gray-800 font-poppins font-light hidden md:flex">
           Muhammad Farhan Hamdi
         </h1>
         <AiOutlineUser
           size={28}
-          className="text-white hover:scale-110 transition-transform"
+          className="text-gray-800 hover:scale-110 transition-transform"
           onClick={handleShowModal}
         />
       </div>

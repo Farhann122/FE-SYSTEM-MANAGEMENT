@@ -59,9 +59,12 @@ const ManagementProduct = () => {
 
   return (
     <Layout>
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+      <h1 className="text-3xl font-semibold text-gray-800 ">
         Manajemen Produk
       </h1>
+      <p className="text-gray-600 mb-6">
+        Untuk menambah, mengedit, dan menghapus produk. Anda dapat melihat
+      </p>
 
       {/* Menggunakan SearchBar dengan searchText, setSearchText, dan exportToExcel */}
       <SearchBar

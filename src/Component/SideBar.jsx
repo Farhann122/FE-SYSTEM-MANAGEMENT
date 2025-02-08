@@ -41,15 +41,14 @@ const Sidebar = () => {
         { href: "/productout", label: "Product Keluar", icon: <FaBox /> },
       ],
     },
-
     { href: "/category", label: "Category Product", icon: <BiCategory /> },
     { href: "/users", label: "Users", icon: <AiOutlineUser /> },
-    { href: "/guide", label: "Guide Book", icon: <AiFillBook /> },
     {
       href: "/transaction",
       label: "Transaction",
       icon: <AiOutlineTransaction />,
     },
+    { href: "/guide", label: "Guide Book", icon: <AiFillBook /> },
     {
       href: "/settings",
       label: "Settings Profile",
@@ -57,7 +56,6 @@ const Sidebar = () => {
     },
   ];
 
-  // Toggle submenu based on current path
   useEffect(() => {
     if (
       menuItems[2].subItems.some((sub) =>
@@ -71,20 +69,25 @@ const Sidebar = () => {
   return (
     <main
       className={`flex ${
-        isOpen ? "w-64" : "w-20"
-      } transition-all duration-300 min-h-screen bg-zinc-800 relative`}
+        isOpen ? "w-52" : "w-20"
+      } transition-all duration-300 min-h-screen bg-white relative shadow-xl`}
     >
       <div className="flex flex-col w-full px-5 py-8 overflow-hidden">
-        {/* Logo */}
-        <a href="#">
+        <a href="#" className="flex gap-2 items-center">
           <img
-            src={logo}
+            src="https://i.pinimg.com/736x/e9/20/06/e92006c2fc56e0d6b0761dce065e708d.jpg"
             alt="Logo"
-            className={`transition-all duration-300 ${isOpen ? "" : "w-6"}`}
+            className={`transition-all duration-300 rounded-full object-cover aspect-square ${
+              isOpen ? "w-10" : "w-6"
+            }`}
           />
+          {isOpen && (
+            <h1 className="font-poppins text-sm  font-semibold text-gray-800">
+              Shineskin Skincare
+            </h1>
+          )}
         </a>
 
-        {/* Menu Navigasi */}
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav className="flex-1 -mx-3 space-y-3">
             {menuItems.map((item, index) => {
@@ -95,14 +98,13 @@ const Sidebar = () => {
                 : location.pathname === item.href;
 
               return item.isDropdown ? (
-                // Dropdown menu untuk Product
                 <div key={index}>
                   <button
                     onClick={() => setIsProductOpen(!isProductOpen)}
                     className={`flex items-center w-full px-3 py-2 rounded-md transition-colors duration-300 ${
                       isActive
-                        ? "bg-white text-black font-semibold"
-                        : "text-white hover:bg-white hover:text-black"
+                        ? "bg-orange-500 text-white font-semibold"
+                        : "text-gray-800 hover:bg-orange-500 hover:text-white"
                     }`}
                   >
                     {item.icon}
@@ -118,8 +120,6 @@ const Sidebar = () => {
                         <FiChevronDown className="ml-auto" />
                       ))}
                   </button>
-
-                  {/* Submenu untuk Product */}
                   {isProductOpen && (
                     <div className="ml-6 space-y-2 pt-3">
                       {item.subItems.map((subItem, subIndex) => (
@@ -128,8 +128,8 @@ const Sidebar = () => {
                           href={subItem.href}
                           className={`flex items-center px-3 py-2 rounded-md transition-colors duration-300 ${
                             location.pathname === subItem.href
-                              ? "bg-white text-black font-semibold"
-                              : "text-white hover:bg-white hover:text-black"
+                              ? "bg-orange-500 text-white font-semibold"
+                              : "text-gray-800 hover:bg-orange-500 hover:text-white"
                           }`}
                         >
                           {subItem.icon}
@@ -144,14 +144,13 @@ const Sidebar = () => {
                   )}
                 </div>
               ) : (
-                // Item menu biasa
                 <a
                   key={index}
                   href={item.href}
                   className={`flex items-center px-3 py-2 rounded-md transition-colors duration-300 ${
                     isActive
-                      ? "bg-white text-black font-semibold"
-                      : "text-white hover:bg-white hover:text-black"
+                      ? "bg-orange-500 text-white font-semibold"
+                      : "text-gray-800 hover:bg-orange-500 hover:text-white"
                   }`}
                 >
                   {item.icon}
@@ -165,14 +164,12 @@ const Sidebar = () => {
             })}
           </nav>
         </div>
-
-        {/* Tombol Toggle Sidebar */}
         <div className="flex justify-center">
           <button
             onClick={() => setIsOpen(!isOpen)}
             className={`transition-all duration-300 absolute bottom-12 ${
               isOpen ? "w-48 h-8" : "w-14 h-8"
-            } flex justify-center items-center bg-gray-700 text-white`}
+            } flex justify-center items-center bg-orange-500 text-white`}
           >
             {isOpen ? <FiChevronLeft /> : <FiChevronRight />}
           </button>
