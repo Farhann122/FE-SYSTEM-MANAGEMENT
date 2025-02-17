@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { Modal, Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   // Modal Show Logout Profile
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigate = useNavigate();
+  const username = localStorage.getItem("username");
+  const email = localStorage.getItem("email");
+  const role = localStorage.getItem("role");
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
@@ -12,6 +17,12 @@ const Header = () => {
 
   const handleShowModal = () => {
     setIsModalVisible(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    navigate("/");
   };
 
   return (
@@ -24,7 +35,7 @@ const Header = () => {
       {/* Profil User */}
       <div className="flex items-center gap-2 md:gap-4 cursor-pointer">
         <h1 className="text-gray-800 font-poppins font-light hidden md:flex">
-          Muhammad Farhan Hamdi
+          {username}
         </h1>
         <AiOutlineUser
           size={28}
@@ -42,20 +53,15 @@ const Header = () => {
           <Button key="cancel" onClick={handleCloseModal}>
             Batal
           </Button>,
-          <Button
-            key="logout"
-            type="primary"
-            danger
-            onClick={() => alert("Logout Berhasil!")}
-          >
+          <Button key="logout" type="primary" danger onClick={handleLogout}>
             Logout
           </Button>,
         ]}
       >
         <div className="font-poppins text-justify">
-        <p>Nama: Muhammad Farhan Hamdi</p>
-        <p>Email: farhan@example.com</p>
-        <p>Role: Admin</p>
+          <p>Nama : {username}</p>
+          <p>Email: {email}</p>
+          <p>Role: {role}</p>
         </div>
       </Modal>
     </div>

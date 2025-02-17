@@ -22,10 +22,11 @@ import { BiCategory } from "react-icons/bi";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isProductOpen, setIsProductOpen] = useState(false);
+  const [isUserOpen, setIsUserOpen] = useState(false);
   const location = useLocation();
 
   const menuItems = [
-    { href: "/", label: "Home", icon: <AiFillHome /> },
+    { href: "/home", label: "Home", icon: <AiFillHome /> },
     { href: "/dashboard", label: "Dashboard", icon: <AiFillDashboard /> },
     {
       label: "Product",
@@ -42,7 +43,19 @@ const Sidebar = () => {
       ],
     },
     { href: "/category", label: "Category Product", icon: <BiCategory /> },
-    { href: "/users", label: "Users", icon: <AiOutlineUser /> },
+    {
+      label: "Users",
+      icon: <AiOutlineUser />,
+      isDropdown: true,
+      subItems: [
+        { href: "/users", label: "All Users", icon: <AiOutlineUser /> },
+        {
+          href: "/historyusers",
+          label: "History Users",
+          icon: <AiOutlineUser />,
+        },
+      ],
+    },
     {
       href: "/transaction",
       label: "Transaction",
@@ -63,6 +76,13 @@ const Sidebar = () => {
       )
     ) {
       setIsProductOpen(true);
+    }
+    if (
+      menuItems[4].subItems.some((sub) =>
+        location.pathname.startsWith(sub.href)
+      )
+    ) {
+      setIsUserOpen(true);
     }
   }, [location.pathname]);
 
@@ -100,7 +120,11 @@ const Sidebar = () => {
               return item.isDropdown ? (
                 <div key={index}>
                   <button
-                    onClick={() => setIsProductOpen(!isProductOpen)}
+                    onClick={() =>
+                      item.label === "Product"
+                        ? setIsProductOpen(!isProductOpen)
+                        : setIsUserOpen(!isUserOpen)
+                    }
                     className={`flex items-center w-full px-3 py-2 rounded-md transition-colors duration-300 ${
                       isActive
                         ? "bg-orange-500 text-white font-semibold"
@@ -114,13 +138,13 @@ const Sidebar = () => {
                       </span>
                     )}
                     {isOpen &&
-                      (isProductOpen ? (
-                        <FiChevronUp className="ml-auto" />
-                      ) : (
-                        <FiChevronDown className="ml-auto" />
-                      ))}
+                    (item.label === "Product" ? isProductOpen : isUserOpen) ? (
+                      <FiChevronUp className="ml-auto" />
+                    ) : (
+                      <FiChevronDown className="ml-auto" />
+                    )}
                   </button>
-                  {isProductOpen && (
+                  {(item.label === "Product" ? isProductOpen : isUserOpen) && (
                     <div className="ml-6 space-y-2 pt-3">
                       {item.subItems.map((subItem, subIndex) => (
                         <a

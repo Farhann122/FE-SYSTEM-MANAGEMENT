@@ -3,7 +3,8 @@ import { Table } from "antd";
 
 const CategoryTable = ({ categories, handleEdit, handleDeleteCategory }) => {
   const columns = [
-    { title: "ID", dataIndex: "key", key: "key" },
+    
+    { title: "ID", dataIndex: "id", key: "id" }, // ✅ Fix ID
     { title: "Nama Kategori", dataIndex: "name", key: "name" },
     {
       title: "Aksi",
@@ -20,7 +21,7 @@ const CategoryTable = ({ categories, handleEdit, handleDeleteCategory }) => {
 
           {/* Tombol Delete */}
           <button
-            onClick={() => handleDeleteCategory(record.key)}
+            onClick={() => handleDeleteCategory(record.id)} // ✅ Gunakan `id` bukan `key`
             className="font-poppins text-sm w-16 h-7 bg-red-500 rounded-md hover:bg-red-400 flex items-center justify-center text-white"
           >
             Delete
@@ -30,7 +31,7 @@ const CategoryTable = ({ categories, handleEdit, handleDeleteCategory }) => {
     },
   ];
 
-  return <Table columns={columns} dataSource={categories} rowKey="key" />;
+  return <Table columns={columns} dataSource={categories} rowKey="id" />; // ✅ Gunakan `rowKey="id"`
 };
 
 export default CategoryTable;

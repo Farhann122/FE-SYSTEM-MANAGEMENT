@@ -1,7 +1,12 @@
 import React from "react";
-import Layout from "../Component/Layout";
+import Layout from "../../Component/Layout";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const handleBaca = () => {
+    navigate("/guide");
+  };
   return (
     <Layout>
       {/* Hero Section */}
@@ -11,12 +16,16 @@ const Home = () => {
         </h1>
         <p className="text-lg font-poppins text-gray-600 mt-2 max-w-xl">
           Disini anda dapat mengontrol sebuah bisnis anda dengan mudah, sebelum
-          menggunakan sistem ini alangkah lebih baik membaca dokumentasi untuk menggunakan sistem ini.
+          menggunakan sistem ini alangkah lebih baik membaca dokumentasi untuk
+          menggunakan sistem ini.
         </p>
 
         {/* CTA Button */}
         <div className="mt-6">
-          <button className="px-6 py-3 text-lg font-medium text-white bg-orange-500 rounded-lg shadow-lg hover:bg-orange-600 transition-all">
+          <button
+            onClick={handleBaca}
+            className="px-6 py-3 text-lg font-medium text-white bg-orange-500 rounded-lg shadow-lg hover:bg-orange-600 transition-all"
+          >
             Baca Sekarang
           </button>
         </div>

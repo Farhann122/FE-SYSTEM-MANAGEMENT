@@ -4,7 +4,7 @@ import Layout from "../Component/Layout";
 const GuideBook = () => {
   return (
     <Layout>
-      <div className="mb-6">
+      <div className="">
         <h1 className="text-3xl font-semibold text-gray-800">
           Panduan Penggunaan Sistem
         </h1>
@@ -93,7 +93,7 @@ const GuideBook = () => {
       </div>
 
       {/* Kontak Bantuan */}
-      <div className="bg-white p-6 rounded-xl shadow-md mb-6">
+      {/* <div className="bg-white p-6 rounded-xl shadow-md mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">Kontak Bantuan</h2>
         <p className="text-gray-700 mt-2">
           Jika Anda memerlukan bantuan lebih lanjut, jangan ragu untuk
@@ -101,7 +101,7 @@ const GuideBook = () => {
           <strong>support@sistem.com</strong> atau hubungi nomor{" "}
           <strong>+62 123 456 789</strong>.
         </p>
-      </div>
+      </div> */}
     </Layout>
   );
 };

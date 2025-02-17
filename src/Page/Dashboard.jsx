@@ -15,20 +15,34 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Title);
 
 const Dashboard = () => {
   // Labels manual untuk bulan
-  const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+  const labels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   const data = {
     labels: labels,
     datasets: [
       {
         label: "Pendapatan",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        backgroundColor: "rgba(255, 165, 0, 0.5)", // Orange transparan
-        borderColor: "rgb(255, 165, 0)", // Orange solid
+        data: [65, 59, 80, 81, 56, 55, 40, 45, 60, 70, 50, 65], // Sesuaikan dengan jumlah label
+        backgroundColor: "rgba(255, 165, 0, 0.5)",
+        borderColor: "rgb(255, 165, 0)",
         borderWidth: 1,
       },
     ],
   };
+
   const weeklyLabels = ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"];
 
   const weeklyData = {

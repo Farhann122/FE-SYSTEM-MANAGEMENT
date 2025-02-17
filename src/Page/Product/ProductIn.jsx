@@ -56,7 +56,8 @@ const ProductIn = () => {
       key: "action",
       render: (_, record) => (
         <Button
-          type="link"
+          type="default"
+          className="bg-orange-500 border-orange-500 text-white hover:bg-orange-400"
           onClick={() => {
             setCurrentProduct(record);
             setIsHistoryModalVisible(true);

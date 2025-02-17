@@ -1,65 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../Component/Layout";
 import SearchCategory from "../../Component/CompnCategory/SearchCategory";
 import CategoryTable from "../../Component/CompnCategory/CategoryTable";
 import EditCategoryModal from "../../Component/CompnCategory/EditCategoryModal";
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, message } from "antd";
+import axiosInstance from "../../../axiosInstance";
 
 const CategoryProduct = () => {
-  // State untuk menyimpan daftar kategori
-  const [categories, setCategories] = useState([
-    { key: 1, name: "Elektronik" },
-    { key: 2, name: "Fashion" },
-    { key: 3, name: "Makanan & Minuman" },
-  ]);
+  const [categories, setCategories] = useState([]); // State untuk menyimpan daftar kategori
+  const [searchText, setSearchText] = useState(""); // State pencarian kategori
+  const [isModalVisible, setIsModalVisible] = useState(false); // Modal tambah kategori
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false); // Modal edit kategori
+  const [currentCategory, setCurrentCategory] = useState(null); // Data kategori yang sedang diedit
+  const [form] = Form.useForm();
 
-  // State pencarian kategori
-  const [searchText, setSearchText] = useState("");
+  // 🔥 Fetch all categories saat pertama kali halaman dimuat
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-  // State modal tambah kategori
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // State modal edit kategori
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [currentCategory, setCurrentCategory] = useState(null);
-
-  // Fungsi untuk menambahkan kategori baru
-  const handleAddCategory = (values) => {
-    const newCategory = { key: categories.length + 1, name: values.name };
-    setCategories([...categories, newCategory]);
-    setIsModalVisible(false);
+  const fetchCategories = async () => {
+    try {
+      const response = await axiosInstance.get("/category");
+      console.log("API Response:", response.data.data); // 🔍 Cek hasil API
+      setCategories(response.data.data);
+    } catch (error) {
+      message.error("Failed to fetch categories");
+    }
   };
 
-  // Fungsi untuk mengedit kategori
-  const handleEditCategory = (values) => {
-    setCategories(
-      categories.map((category) =>
-        category.key === currentCategory.key
-          ? { ...category, name: values.name }
-          : category
-      )
-    );
-    setIsEditModalVisible(false);
+  // ✅ Tambah atau Update kategori ke database
+  const handleSaveCategory = async (values) => {
+    try {
+      if (isEditModalVisible && currentCategory) {
+        // 🔄 UPDATE KATEGORI
+        await axiosInstance.put(
+          `/update/category/${currentCategory.id}`,
+          values
+        );
+        message.success("Category updated successfully");
+      } else {
+        // ✅ CREATE KATEGORI BARU
+        await axiosInstance.post("/create/category", values);
+        message.success("Category added successfully");
+      }
+      fetchCategories(); // Refresh data kategori
+      setIsModalVisible(false);
+      setIsEditModalVisible(false);
+    } catch (error) {
+      message.error("Failed to save category");
+    }
   };
 
-  // Fungsi untuk menghapus kategori
-  const handleDeleteCategory = (key) => {
-    setCategories(categories.filter((category) => category.key !== key));
+  // ✅ Hapus kategori
+  const handleDeleteCategory = async (id) => {
+    try {
+      await axiosInstance.delete(`/delete/category/${id}`);
+      message.success("Category deleted successfully");
+      fetchCategories(); // Refresh data kategori setelah dihapus
+    } catch (error) {
+      message.error("Failed to delete category");
+    }
   };
 
-  // Filter kategori berdasarkan pencarian
+  // ✅ Filter kategori berdasarkan pencarian
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return (
     <Layout>
-      <h1 className="text-3xl font-semibold text-gray-800 ">
-        Kategori Produk
-      </h1>
-      <p className="font-poppins text-sm text-gray-600 mb-6">Filter kategori berdasarkan pencarian</p>
+      <h1 className="text-3xl font-semibold text-gray-800">Kategori Produk</h1>
+      <p className="font-poppins text-sm text-gray-800 mb-6">
+        Filter kategori berdasarkan pencarian
+      </p>
 
-      {/* Komponen Search */}
+      {/* 🔍 Komponen Search */}
       <SearchCategory
         searchText={searchText}
         setSearchText={setSearchText}
@@ -67,24 +83,25 @@ const CategoryProduct = () => {
         exportToExcel={() => console.log("Export Excel")}
       />
 
-      {/* Tabel Kategori */}
+      {/* 📋 Tabel Kategori */}
       <CategoryTable
         categories={filteredCategories}
         handleEdit={(record) => {
-          setCurrentCategory(record);
-          setIsEditModalVisible(true);
+          setCurrentCategory(record); // Set kategori yang akan diedit
+          setIsEditModalVisible(true); // Buka modal edit
+          form.setFieldsValue({ name: record.name }); // Set nilai form edit
         }}
         handleDeleteCategory={handleDeleteCategory}
       />
 
-      {/* Modal Tambah Kategori */}
+      {/* ➕ Modal Tambah Kategori */}
       <Modal
         title="Tambah Kategori"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
       >
-        <Form onFinish={handleAddCategory}>
+        <Form onFinish={handleSaveCategory}>
           <Form.Item
             label="Nama Kategori"
             name="name"
@@ -101,12 +118,13 @@ const CategoryProduct = () => {
         </Form>
       </Modal>
 
-      {/* Modal Edit Kategori */}
+      {/* ✏ Modal Edit Kategori */}
       <EditCategoryModal
         isEditModalVisible={isEditModalVisible}
         setIsEditModalVisible={setIsEditModalVisible}
-        handleEditCategory={handleEditCategory}
+        handleEditCategory={handleSaveCategory}
         currentCategory={currentCategory}
+        form={form}
       />
     </Layout>
   );

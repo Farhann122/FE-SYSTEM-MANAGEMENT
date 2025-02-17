@@ -68,7 +68,6 @@ const ProductOut = () => {
         dataSource={products}
         columns={columns}
         pagination={{ pageSize: 5 }}
-      
       />
 
       {/* Modal Riwayat Pengeluaran */}
@@ -79,22 +78,13 @@ const ProductOut = () => {
         footer={null}
       >
         {currentProduct ? (
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border p-2">Tanggal</th>
-                <th className="border p-2">Jumlah Keluar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentProduct.outHistory.map((history, index) => (
-                <tr key={index} className="text-center">
-                  <td className="border p-2">{history.date}</td>
-                  <td className="border p-2">{history.quantity}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ul className="list-disc pl-6">
+            {currentProduct.outHistory.map((history, index) => (
+              <li key={index}>
+                {history.date} - Jumlah Keluar: {history.quantity}
+              </li>
+            ))}
+          </ul>
         ) : (
           <p>Tidak ada riwayat pengeluaran.</p>
         )}
